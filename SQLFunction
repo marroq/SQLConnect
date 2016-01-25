@@ -1,0 +1,35 @@
+Imports System
+Imports System.Data
+Imports System.Data.SqlClient
+
+Module Utils
+    Public Function GetQuery(ByVal SQLString As String) As String
+        'Cadena de conexión a la base de datos
+        Const connstring As String = "Data Source=PSGT-1004;Initial Catalog=PCAdmon;Persist Security Info=True;User ID=sa;Password=OEM02panorama"
+
+        'Variable que conecta la base de datos
+        Dim SQLConn As New SqlConnection()
+        'Variable que contiene la capacidad de usar una instrucción SQL
+        Dim SQLCmd As New SqlCommand()
+
+        SQLConn.ConnectionString = connstring
+        'Conexión abierta
+        SQLConn.Open()
+
+        SQLCmd.Connection = SQLConn
+        'Escribe la condición SQL
+        SQLCmd.CommandText = SQLString
+        'Permite usar la instrucción SQL
+        GetQuery = SQLCmd.ExecuteScalar().ToString()
+        'Conexión cerrada
+        SQLConn.Close()
+    End Function
+End Module
+
+
+Public Function Example(ByVal Empresa As Integer, ByVal Moneda As String) As String
+      Dim SQL As String
+      SQL = String.Format("DELETE FROM BANMonedas WHERE EmpresaId={0} AND MonedaId='{1}'", Empresa.ToString, Moneda.ToString())
+
+      Example = GetQuery(SQL)
+End Function
